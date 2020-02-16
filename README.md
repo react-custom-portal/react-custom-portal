@@ -1,6 +1,6 @@
 ## react-custom-portal
 
-So if you want to render part of component markupin another place this is right for you.
+If you want to render part of your component markup in some another place this help you.
 It's a bit like html portal in react, but for general react markup.
 
 ```js
@@ -8,17 +8,17 @@ import { createCustomPortal } from 'react-custom-portal'
 
 const {
 	PortalRoot: MyPortalRoot,
-	PortalContent: ComponentSettings,
-	Portal: SettingsPlaceHolder,
+	PortalContent: ComponentExternalMarkup,
+	Portal: ExternalMarkupPlaceHolder,
 } = createCustomPortal()
 
 const MyComponent = () => {
 	<SomeMarkup>
 		...
-		<ComponentSettings>
+		<ComponentExternalMarkup>
 			This will not be rendered here,
-			but instead it will be rendered within SettingsPlaceHolder
-		</ComponentSettings>
+			but instead it will be rendered within ExternalMarkupPlaceHolder
+		</ComponentExternalMarkup>
 		...
 	</SomeMarkup>
 }
@@ -26,9 +26,9 @@ const MyComponent = () => {
 const MySettings = () => {
 	<AnotherMarkup>
 		...
-		<SettingsPlaceHolder>
-			{/*  content of the <ComponentSettings ... /> */}
-		</SettingsPlaceHolder>
+		<ExternalMarkupPlaceHolder>
+			{/*  content of the <ComponentExternalMarkup ... /> */}
+		</ExternalMarkupPlaceHolder>
 		...
 	</AnotherMarkup>
 }
