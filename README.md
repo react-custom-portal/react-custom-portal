@@ -7,40 +7,40 @@ It's a bit like html portal in react, but for general react markup.
 import { createCustomPortal } from 'react-custom-portal'
 
 const {
-    PortalRoot: MyPortalRoot,
-    PortalContent: ComponentExternalMarkup,
-    Portal: ExternalMarkupPlaceHolder,
+  PortalRoot: MyPortalRoot,
+  PortalContent: ComponentExternalMarkup,
+  Portal: ExternalMarkupPlaceHolder,
 } = createCustomPortal()
 
 const MyComponent = () => {
-    <SomeMarkup>
-        ...
-        <ComponentExternalMarkup>
-            This will not be rendered here,
-            but instead it will be rendered within ExternalMarkupPlaceHolder
-        </ComponentExternalMarkup>
-        ...
-    </SomeMarkup>
+  <SomeMarkup>
+    ...
+    <ComponentExternalMarkup>
+      This will not be rendered here,
+      but instead it will be rendered within ExternalMarkupPlaceHolder
+    </ComponentExternalMarkup>
+    ...
+  </SomeMarkup>
 }
 
 const MySettings = () => {
-    <AnotherMarkup>
-        ...
-        <ExternalMarkupPlaceHolder>
-            {/*  content of the <ComponentExternalMarkup ... /> */}
-        </ExternalMarkupPlaceHolder>
-        ...
-    </AnotherMarkup>
+  <AnotherMarkup>
+    ...
+    <ExternalMarkupPlaceHolder>
+      {/*  content of the <ComponentExternalMarkup ... /> */}
+    </ExternalMarkupPlaceHolder>
+    ...
+  </AnotherMarkup>
 }
 
 const MyPage = () => {
-    <MyPortalRoot>
-        ...
-        <MyComponent />
-        ...
-        <MySettings />
-        <
-    </MyPortalRoot>
+  <MyPortalRoot>
+    ...
+    <MyComponent />
+    ...
+    <MySettings />
+    <
+  </MyPortalRoot>
 }
 
 ```
