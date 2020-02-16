@@ -1,6 +1,6 @@
 {
   "name": "react-custom-portal",
-  "version": "0.1.3",
+  "version": "1.0.0",
   "main": "dist/index.js",
   "dependencies": {},
   "peerDependencies": {
