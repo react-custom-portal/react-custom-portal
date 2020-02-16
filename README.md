@@ -26,7 +26,8 @@ const MyComponent = () => {
 const MySettings = () => {
   <AnotherMarkup>
     ...
-    {/* The content of <ComponentExternalMarkup ... /> will be rendered here instead of <ExternalMarkupPlaceHolder /> */}
+    {/* The content of <ComponentExternalMarkup ... /> will be rendered here
+    instead of <ExternalMarkupPlaceHolder /> */}
     <ExternalMarkupPlaceHolder />
     </ExternalMarkupPlaceHolder>
     ...
