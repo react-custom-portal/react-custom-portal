@@ -52,5 +52,22 @@
     "presets": [
       "react-app"
     ]
-  }
+  },
+  "description": "renders part of your component markup outside in some another place",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/react-custom-portal/react-custom-portal.git"
+  },
+  "keywords": [
+    "react",
+    "portal",
+    "render",
+    "outside"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/react-custom-portal/react-custom-portal/issues"
+  },
+  "homepage": "https://github.com/react-custom-portal/react-custom-portal#readme"
 }
