@@ -1,10 +1,10 @@
 import React, { createContext, useContext, useState, useLayoutEffect, useEffect } from 'react'
 
-export const createCustomPortal = (name = undefined) => {
+export const createPortal = (name = undefined) => {
 	const PortalContext = createContext()
 
 	const PortalRoot = ({ children }) => {
-		const [portal] = useState(createPortal)
+		const [portal] = useState(createCustomPortal)
 		return (
 			<PortalContext.Provider value={portal}>
 				{children}
@@ -62,7 +62,7 @@ export const createCustomPortal = (name = undefined) => {
 	}
 }
 
-const createPortal = () => new CustomPortal()
+const createCustomPortal = () => new CustomPortal()
 
 class CustomPortal {
 	data = new Map()

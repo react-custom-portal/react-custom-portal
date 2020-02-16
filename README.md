@@ -4,13 +4,13 @@ This helps you if you want to render part of your component markup in some anoth
 It's a bit like html portal in react, but for general react markup.
 
 ```js
-import { createCustomPortal } from 'react-custom-portal'
+import { createPortal } from 'react-custom-portal'
 
 const {
   PortalRoot: MyPortalRoot,
   PortalContent: ComponentExternalMarkup,
   Portal: ExternalMarkupPlaceHolder,
-} = createCustomPortal()
+} = createPortal()
 
 const MyComponent = () => {
   <SomeMarkup>
@@ -47,4 +47,4 @@ const MyPage = () => {
 
 By default &lt;Portal /> will render the content of  all the &lt;PortalContent />  been rendered within the &lt;PortalRoot />. If you want to tweak some things you can set the `render` property of &lt;Portal /> to a function and it will be passed an array of &lt;PortalContent />s. Then filter them by their props and return some markup to render.
 
-`createCustomPortal` can be passed a string `name` to tune the names of created components for debug purpose.
+`createPortal` can be passed a string `name` to tune the names of created components for debug purpose.

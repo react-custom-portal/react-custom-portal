@@ -1,1 +1,1 @@
-export { createCustomPortal } from './createCustomPortal'
+export { createPortal } from './createPortal'
