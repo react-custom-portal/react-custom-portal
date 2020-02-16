@@ -39,7 +39,7 @@ const MyPage = () => {
     <MyComponent />
     ...
     <MySettings />
-    <
+    ...
   </MyPortalRoot>
 }
 
