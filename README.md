@@ -1,6 +1,6 @@
 ## react-custom-portal
 
-If you want to render part of your component markup in some another place this helps you.
+This helps you if you want to render part of your component markup in some another place.
 It's a bit like html portal in react, but for general react markup.
 
 ```js
