@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { createCustomPortal } from './components'
+import { createPortal } from './components'
 
-export const { PortalRoot, PortalContent, Portal } = createCustomPortal('switch')
+export const { PortalRoot, PortalContent, Portal } = createPortal('switch')
 
 export const Switch = () => {
   const [state, setState] = useState(false)
