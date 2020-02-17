@@ -1,8 +1,10 @@
-import React, { createContext, useContext, useState, useLayoutEffect, useEffect } from 'react'
+import React, { createContext, useContext, useState, useLayoutEffect, useEffect } from "react"
 
 //
 //
-export const createPortal = (displayName = `Portal${++DefaultPortalName}`) => {
+export const createPortal = (options) => {
+	const { displayName } = getOptions(options)
+
 	const PortalContext = createContext()
 
 	const PortalRoot = ({ children }) => {
@@ -17,16 +19,16 @@ export const createPortal = (displayName = `Portal${++DefaultPortalName}`) => {
 
 	const PortalContent = (props) => {
 		const portal = useContext(PortalContext)
-		return usePortalContent(portal, props, ContentRenderer)
+		return renderContentProxy(portal, ContentRenderer, props)
 	}
 	PortalContent.displayName = `${displayName}.Content`
 
 	const ContentRenderer = ({ children }) => children
 	ContentRenderer.displayName = PortalContent.displayName
 
-	const PortalRender = ({ render = defaultRender }) => {
+	const PortalRender = ({ children }) => {
 		const portal = useContext(PortalContext)
-		return usePortalRender(portal, render)
+		return usePortalRender(portal, children)
 	}
 	PortalRender.displayName = `${displayName}.Render`
 
@@ -39,20 +41,18 @@ export const createPortal = (displayName = `Portal${++DefaultPortalName}`) => {
 
 //
 //
-export const createGlobalPortal = (displayName = `GlobalPortal${++DefaultPortalName}`) => {
+export const createGlobalPortal = (options) => {
+	const { displayName } = getOptions(options)
+
 	const portal = createCustomPortal()
 
-	const PortalContent = (props) => {
-		return usePortalContent(portal, props, ContentRenderer)
-	}
+	const PortalContent = props => renderContentProxy(portal, ContentRenderer, props)
 	PortalContent.displayName = `${displayName}.Content`
 
 	const ContentRenderer = ({ children }) => children
 	ContentRenderer.displayName = PortalContent.displayName
 
-	const PortalRender = ({ render = defaultRender }) => {
-		return usePortalRender(portal, render)
-	}
+	const PortalRender = ({ children }) => usePortalRender(portal, children)
 	PortalRender.displayName = `${displayName}.Render`
 
 	return {
@@ -63,22 +63,52 @@ export const createGlobalPortal = (displayName = `GlobalPortal${++DefaultPortalN
 
 //
 //
+const getOptions = (options, component) => {
+	let actualOptions = typeof options === "string" ? { displayName: options } : { ...options }
+	if (!actualOptions.displayName) {
+		actualOptions.displayName = `${component}${++DefaultPortalName}`
+	}
+	return actualOptions
+}
+
+//
+//
 let DefaultPortalName = 0
 
 //
 //
-const usePortalContent = (portal, props, ContentRenderer) => {
-	const [id] = useState(createID)
-	const data = <ContentRenderer {...props} key={id} />
+const  renderContentProxy = (portal, ContentRenderer, { children, preserveContexts, ...proxyProps }) =>
+	(function render(index, content) {
+		if (preserveContexts && index < preserveContexts.length) {
+			const Context = preserveContexts[index]
+			return (
+				<Context.Consumer>
+					{value => render(index + 1, <Context.Provider value={value}>{content}</Context.Provider>)}
+				</Context.Consumer>
+			)
+		} else {
+			return (
+				<ContentProxy {...{ content, proxyProps, portal, ContentRenderer }} />
+			)
+		}
+	})(0, children)
 
-	portal.data.set(id, data)
+//
+//
+const ContentProxy = ({ content, proxyProps, portal, ContentRenderer }) => {
+	const [id] = useState(createID)
+
+	const markup = <ContentRenderer {...proxyProps} key={id}>{content}</ContentRenderer>
+
+	portal.data.set(id, markup)
 	useLayoutEffect(() => {
-		portal.data.set(id, data)
+		portal.data.set(id, markup)
 		portal.dataChanged()
 	})
 	useEffect(() => () => {
 		portal.data.delete(id)
 		portal.dataChanged()
+		// eslint-disable-next-line
 	}, [])
 
 	return null
@@ -86,19 +116,21 @@ const usePortalContent = (portal, props, ContentRenderer) => {
 
 //
 //
-const usePortalRender = (portal, render = defaultRender) => {
+const usePortalRender = (portal, children = defaultRender) => {
 	const [id] = useState(createID)
 	const [, subscription] = useState()
 
 	portal.subscriptions.set(id, subscription)
+	// eslint-disable-next-line
 	useLayoutEffect(() => {
 		portal.subscriptions.set(id, subscription)
 	})
 	useEffect(() => () => {
 		portal.subscriptions.delete(id)
+		// eslint-disable-next-line
 	}, [])
 
-	return render([...portal.data.values()])
+	return children([...portal.data.values()])
 }
 
 //
@@ -110,7 +142,9 @@ class CustomPortal {
 	subscriptions = new Map()
 
 	dataChanged() {
-		[...this.subscriptions.values()].forEach(subscription => subscription({}))
+		for (const subscription of this.subscriptions.values()) {
+			subscription({})
+		}
 	}
 }
 

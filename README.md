@@ -40,6 +40,23 @@ const MyPage = () => {
 
 ```
 
-By default &lt;Portal.Render /> will render the content of  all the &lt;Portal.Content />  been rendered within the &lt;Portal.Root />. If you want to tweak some things you can set the `render` property of &lt;Portal.Render /> to a function and it will be passed an array of &lt;Portal.Content />s. Then filter them by their props and return some markup to render.
+By default &lt;Portal.Render /> will render the content of all the &lt;Portal.Content />s  been rendered within the &lt;Portal.Root />. If you want to tweak some things you can pass a function as the only child of &lt;Portal.Render /> and it will be passed an array of &lt;Portal.Content />s.
 
-`createPortal` can be passed a string `displayName` to tune the names of created components for debug purpose.
+```js
+	...
+	<ExternalMarkup.Content shape="circle" ... />
+	...
+	<ExternalMarkup.Content shape="rectangle" ... />
+	...
+	<ExternalMarkup.Render>
+		{children => children.filter(child => child.props.shape === "rectangle")}
+	</ExternalMarkup.Render>
+	...
+```
+
+`createPortal` can be passed an options object with `displayName` prop to tune the names of created components for debug purpose.
+
+```js
+const Objects3DSettings = createPortal({ displayName: "Objects3DSettings" })
+// now react tools displays "Objects3DSettings.Content" for <Objects3DSettings.Content ... /> instead of "Portal.Content"
+```
