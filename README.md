@@ -6,19 +6,15 @@ It's a bit like html portal in react, but for general react markup.
 ```js
 import { createPortal } from 'react-custom-portal'
 
-const {
-  PortalRoot: MyPortalRoot,
-  PortalContent: ComponentExternalMarkup,
-  Portal: ExternalMarkupPlaceHolder,
-} = createPortal()
+const ExternalMarkup = createPortal()
 
 const MyComponent = () => {
   <SomeMarkup>
     ...
-    <ComponentExternalMarkup>
+    <ExternalMarkup.Content>
       This will not be rendered here,
-      but instead it will be rendered within ExternalMarkupPlaceHolder
-    </ComponentExternalMarkup>
+      but instead it will be rendered within ExternalMarkup.Render
+    </ExternalMarkup.Content>
     ...
   </SomeMarkup>
 }
@@ -26,25 +22,25 @@ const MyComponent = () => {
 const MySettings = () => {
   <AnotherMarkup>
     ...
-    {/* The content of <ComponentExternalMarkup ... /> will be rendered here
-    instead of <ExternalMarkupPlaceHolder /> */}
-    <ExternalMarkupPlaceHolder />
+    {/* The content of <ExternalMarkup.Content ... /> will be rendered here
+    instead of <ExternalMarkup.Render /> */}
+    <ExternalMarkup.Render />
     ...
   </AnotherMarkup>
 }
 
 const MyPage = () => {
-  <MyPortalRoot>
+  <ExternalMarkup.Root>
     ...
     <MyComponent />
     ...
     <MySettings />
     ...
-  </MyPortalRoot>
+  </ExternalMarkup.Root>
 }
 
 ```
 
-By default &lt;Portal /> will render the content of  all the &lt;PortalContent />  been rendered within the &lt;PortalRoot />. If you want to tweak some things you can set the `render` property of &lt;Portal /> to a function and it will be passed an array of &lt;PortalContent />s. Then filter them by their props and return some markup to render.
+By default &lt;Portal.Render /> will render the content of  all the &lt;Portal.Content />  been rendered within the &lt;Portal.Root />. If you want to tweak some things you can set the `render` property of &lt;Portal.Render /> to a function and it will be passed an array of &lt;Portal.Content />s. Then filter them by their props and return some markup to render.
 
 `createPortal` can be passed a string `name` to tune the names of created components for debug purpose.

@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState, useLayoutEffect, useEffect 
 export const createPortal = (name = undefined) => {
 	const PortalContext = createContext()
 
-	const PortalRoot = ({ children }) => {
+	const Root = ({ children }) => {
 		const [portal] = useState(createCustomPortal)
 		return (
 			<PortalContext.Provider value={portal}>
@@ -12,10 +12,10 @@ export const createPortal = (name = undefined) => {
 		)
 	}
 
-	const PortalContent = (props) => {
+	const Content = (props) => {
 		const [id] = useState(createID)
 		const portal = useContext(PortalContext)
-		const data = <PortalContentRenderer {...props} key={id} />
+		const data = <ContentRenderer {...props} key={id} />
 
 		portal.data.set(id, data)
 		useLayoutEffect(() => {
@@ -30,9 +30,9 @@ export const createPortal = (name = undefined) => {
 		return null
 	}
 
-	const PortalContentRenderer = ({ children }) => children
+	const ContentRenderer = ({ children }) => children
 
-	const Portal = ({ render = defaultRender }) => {
+	const Render = ({ render = defaultRender }) => {
 		const [id] = useState(createID)
 		const portal = useContext(PortalContext)
 		const [, subscription] = useState()
@@ -49,16 +49,16 @@ export const createPortal = (name = undefined) => {
 	}
 
 	if (name) {
-		PortalRoot.displayName = `${name}.PortalRoot`
-		PortalContent.displayName = `${name}.PortalContent`
-		Portal.displayName = `${name}.Portal`
+		Root.displayName = `${name}.Root`
+		Content.displayName = `${name}.Content`
+		Render.displayName = `${name}.Render`
 	}
-	PortalContentRenderer.displayName = PortalContent.displayName || PortalContent.name
+	ContentRenderer.displayName = Content.displayName || Content.name
 
 	return {
-		PortalRoot,
-		PortalContent,
-		Portal,
+		Root,
+		Content,
+		Render,
 	}
 }
 
