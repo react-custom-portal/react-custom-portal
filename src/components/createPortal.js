@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useLayoutEffect, useEffect 
 
 //
 //
-export const createPortal = (name = undefined) => {
+export const createPortal = (displayName = `Portal${++DefaultPortalName}`) => {
 	const PortalContext = createContext()
 
 	const PortalRoot = ({ children }) => {
@@ -13,25 +13,22 @@ export const createPortal = (name = undefined) => {
 			</PortalContext.Provider>
 		)
 	}
+	PortalRoot.displayName = `${displayName}.Root`
 
 	const PortalContent = (props) => {
 		const portal = useContext(PortalContext)
 		return usePortalContent(portal, props, ContentRenderer)
 	}
+	PortalContent.displayName = `${displayName}.Content`
 
 	const ContentRenderer = ({ children }) => children
+	ContentRenderer.displayName = PortalContent.displayName
 
 	const PortalRender = ({ render = defaultRender }) => {
 		const portal = useContext(PortalContext)
 		return usePortalRender(portal, render)
 	}
-
-	if (name) {
-		PortalRoot.displayName = `${name}.Root`
-		PortalContent.displayName = `${name}.Content`
-		PortalRender.displayName = `${name}.Render`
-	}
-	ContentRenderer.displayName = PortalContent.displayName || PortalContent.name
+	PortalRender.displayName = `${displayName}.Render`
 
 	return {
 		Root: PortalRoot,
@@ -42,30 +39,31 @@ export const createPortal = (name = undefined) => {
 
 //
 //
-export const createGlobalPortal = (name = undefined) => {
+export const createGlobalPortal = (displayName = `GlobalPortal${++DefaultPortalName}`) => {
 	const portal = createCustomPortal()
 
 	const PortalContent = (props) => {
 		return usePortalContent(portal, props, ContentRenderer)
 	}
+	PortalContent.displayName = `${displayName}.Content`
 
 	const ContentRenderer = ({ children }) => children
+	ContentRenderer.displayName = PortalContent.displayName
 
 	const PortalRender = ({ render = defaultRender }) => {
 		return usePortalRender(portal, render)
 	}
-
-	if (name) {
-		PortalContent.displayName = `${name}.Content`
-		PortalRender.displayName = `${name}.Render`
-	}
-	ContentRenderer.displayName = PortalContent.displayName || PortalContent.name
+	PortalRender.displayName = `${displayName}.Render`
 
 	return {
 		Content: PortalContent,
 		Render: PortalRender,
 	}
 }
+
+//
+//
+let DefaultPortalName = 0
 
 //
 //

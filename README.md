@@ -42,4 +42,4 @@ const MyPage = () => {
 
 By default &lt;Portal.Render /> will render the content of  all the &lt;Portal.Content />  been rendered within the &lt;Portal.Root />. If you want to tweak some things you can set the `render` property of &lt;Portal.Render /> to a function and it will be passed an array of &lt;Portal.Content />s. Then filter them by their props and return some markup to render.
 
-`createPortal` can be passed a string `name` to tune the names of created components for debug purpose.
+`createPortal` can be passed a string `displayName` to tune the names of created components for debug purpose.
