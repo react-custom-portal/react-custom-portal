@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import { createPortal } from './components'
+import { createPortal, createGlobalPortal } from './components'
 
-export const Portal = createPortal('OnOff')
+const Portal = createPortal('OnOff')
+const GlobalPortal = createGlobalPortal('OnOff')
 
-export const Switch = () => {
+const Switch = () => {
   const [state, setState] = useState(false)
   return <>
     <input id="switch" type="checkbox" value={state} onClick={() => setState(!state)} />
@@ -12,13 +13,24 @@ export const Switch = () => {
   </>
 }
 
+const SwitchGlobal = () => {
+  const [state, setState] = useState(false)
+  return <>
+    <input id="global-switch" type="checkbox" value={state} onClick={() => setState(!state)} />
+    <label htmlFor="global-switch">global switch</label>
+    <GlobalPortal.Content>{state ? "global-on" : "global-off"}</GlobalPortal.Content>
+  </>
+}
+
 const ExampleApp = () => {
-  return (
+  return <>
     <Portal.Root>
       <div style={{padding: 20}} ><Switch /></div>
       <div style={{padding: 20, backgroundColor: "tomato"}} ><Portal.Render /></div>
     </Portal.Root>
-  )
+    <div style={{padding: 20}} ><SwitchGlobal /></div>
+    <div style={{padding: 20, backgroundColor: "tomato"}} ><GlobalPortal.Render /></div>
+  </>
 }
 
 export default ExampleApp

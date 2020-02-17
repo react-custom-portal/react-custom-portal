@@ -1,1 +1,1 @@
-export { createPortal } from './createPortal'
+export { createPortal, createGlobalPortal } from './createPortal'

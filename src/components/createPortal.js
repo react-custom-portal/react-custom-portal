@@ -1,9 +1,11 @@
 import React, { createContext, useContext, useState, useLayoutEffect, useEffect } from 'react'
 
+//
+//
 export const createPortal = (name = undefined) => {
 	const PortalContext = createContext()
 
-	const Root = ({ children }) => {
+	const PortalRoot = ({ children }) => {
 		const [portal] = useState(createCustomPortal)
 		return (
 			<PortalContext.Provider value={portal}>
@@ -12,56 +14,97 @@ export const createPortal = (name = undefined) => {
 		)
 	}
 
-	const Content = (props) => {
-		const [id] = useState(createID)
+	const PortalContent = (props) => {
 		const portal = useContext(PortalContext)
-		const data = <ContentRenderer {...props} key={id} />
-
-		portal.data.set(id, data)
-		useLayoutEffect(() => {
-			portal.data.set(id, data)
-			portal.dataChanged()
-		})
-		useEffect(() => () => {
-			portal.data.delete(id)
-			portal.dataChanged()
-		}, [])
-
-		return null
+		return usePortalContent(portal, props, ContentRenderer)
 	}
 
 	const ContentRenderer = ({ children }) => children
 
-	const Render = ({ render = defaultRender }) => {
-		const [id] = useState(createID)
+	const PortalRender = ({ render = defaultRender }) => {
 		const portal = useContext(PortalContext)
-		const [, subscription] = useState()
-
-		portal.subscriptions.set(id, subscription)
-		useLayoutEffect(() => {
-			portal.subscriptions.set(id, subscription)
-		})
-		useEffect(() => () => {
-			portal.subscriptions.delete(id)
-		}, [])
-
-		return render([...portal.data.values()])
+		return usePortalRender(portal, render)
 	}
 
 	if (name) {
-		Root.displayName = `${name}.Root`
-		Content.displayName = `${name}.Content`
-		Render.displayName = `${name}.Render`
+		PortalRoot.displayName = `${name}.Root`
+		PortalContent.displayName = `${name}.Content`
+		PortalRender.displayName = `${name}.Render`
 	}
-	ContentRenderer.displayName = Content.displayName || Content.name
+	ContentRenderer.displayName = PortalContent.displayName || PortalContent.name
 
 	return {
-		Root,
-		Content,
-		Render,
+		Root: PortalRoot,
+		Content: PortalContent,
+		Render: PortalRender,
 	}
 }
 
+//
+//
+export const createGlobalPortal = (name = undefined) => {
+	const portal = createCustomPortal()
+
+	const PortalContent = (props) => {
+		return usePortalContent(portal, props, ContentRenderer)
+	}
+
+	const ContentRenderer = ({ children }) => children
+
+	const PortalRender = ({ render = defaultRender }) => {
+		return usePortalRender(portal, render)
+	}
+
+	if (name) {
+		PortalContent.displayName = `${name}.Content`
+		PortalRender.displayName = `${name}.Render`
+	}
+	ContentRenderer.displayName = PortalContent.displayName || PortalContent.name
+
+	return {
+		Content: PortalContent,
+		Render: PortalRender,
+	}
+}
+
+//
+//
+const usePortalContent = (portal, props, ContentRenderer) => {
+	const [id] = useState(createID)
+	const data = <ContentRenderer {...props} key={id} />
+
+	portal.data.set(id, data)
+	useLayoutEffect(() => {
+		portal.data.set(id, data)
+		portal.dataChanged()
+	})
+	useEffect(() => () => {
+		portal.data.delete(id)
+		portal.dataChanged()
+	}, [])
+
+	return null
+}
+
+//
+//
+const usePortalRender = (portal, render = defaultRender) => {
+	const [id] = useState(createID)
+	const [, subscription] = useState()
+
+	portal.subscriptions.set(id, subscription)
+	useLayoutEffect(() => {
+		portal.subscriptions.set(id, subscription)
+	})
+	useEffect(() => () => {
+		portal.subscriptions.delete(id)
+	}, [])
+
+	return render([...portal.data.values()])
+}
+
+//
+//
 const createCustomPortal = () => new CustomPortal()
 
 class CustomPortal {
