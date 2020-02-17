@@ -12,7 +12,7 @@ const MyComponent = () => {
   <SomeMarkup>
     ...
     <ExternalMarkup.Content>
-      This will not be rendered here,
+      This text will not be rendered here,
       but instead it will be rendered within ExternalMarkup.Render
     </ExternalMarkup.Content>
     ...
