@@ -51,6 +51,15 @@
   "babel": {
     "presets": [
       "react-app"
+    ],
+    "plugins": [
+      [
+        "@babel/plugin-transform-modules-commonjs",
+        {
+          "noInterop": true,
+          "loose": true
+        }
+      ]
     ]
   },
   "description": "renders part of your component markup outside in some another place",
